@@ -18,40 +18,43 @@ class Solution {
 public:
     Node* copyRandomList(Node* head) {
 
-        if(head == NULL ) return NULL;
-        unordered_map<Node* ,Node* >mp;
-
+        if(head == NULL)
+        return NULL;
+        // insert new nodes in between nodes
         Node* curr = head;
-        Node* prev = NULL;
-        Node* newHead = NULL;
-
         while(curr){
             Node* temp = new Node(curr->val);
-
-            mp[curr] = temp;
-            if(newHead == NULL){
-                newHead = temp;
-                prev = newHead;
+            temp->next = curr->next;
+            curr->next = temp; 
+            curr = curr->next->next; 
+        }
+        // adding random pointer in new Nodes
+        curr = head;
+        
+        while(curr && curr->next ){
+            if(curr->random == NULL){
+                curr->next->random = NULL;
             }
             else{
-                prev->next = temp;
-                prev = temp;
-            }
-            curr = curr ->next;
+                curr->next->random = curr->random->next;
+            }  
+            curr = curr->next->next;
         }
 
+        // separating the nodes 
         curr = head;
-        Node* newCurr = newHead;
+        Node* newHead = head->next;
+        Node* newCurr = curr->next;
 
-        while(curr){
-            if(curr->random == NULL){
-                newCurr->random == NULL;
-            }
-            else{
-                newCurr->random = mp[curr->random];
-            }
+        while(curr && newCurr){
+            curr->next =curr->next == NULL ? NULL:curr->next->next; 
+
+            newCurr->next =newCurr->next == NULL ? NULL:newCurr->next->next;
+
             curr = curr->next;
             newCurr = newCurr->next;
+
+
         }
 
         return newHead;
